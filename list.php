@@ -271,7 +271,7 @@ $columns = [
     'street_name', 'purok_name', 'place_of_birth', 'date_of_birth', 'age',
     'civil_status', 'citizenship', 'employed_unemployed', 'solo_parent', 'ofw',
     'occupation', 'toilet', 'school_youth', 'pwd', 'indigenous',
-    'cellphone_no', 'facebook', 'valid_id', 'type_id', 'household_id','family_id', 'womens_association', 'senior_citizen'
+    'cellphone_no', 'facebook', 'valid_id', 'type_id', 'household_id','family_id', 'womens_association', 'senior_citizen' ,'low-income','Owned','Rented','Informal-settle'
 ];
 
 
@@ -341,10 +341,7 @@ $columns = [
   <nav>
     <div class="logo">BARANGAY PAMANLINAN DEMOGRAPHIC RECORDS</div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="dashboard.php">DASHBOARD</a></li>
-      <li><a href="ageGroup.php">AGE GROUP</a></li>
-      <li><a href="disabilitiesGroup.php">DISABILITIES</a></li>
-      <li><a href="deceased.php">DECEASED</a></li>
+      <li><a href="pamanlinan.php">DASHBOARD</a></li>
       <li><a href="add.php">ADD</a></li>
       <li><a href="logout.php">LOGOUT</a></li>
     </ul>

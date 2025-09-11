@@ -82,7 +82,7 @@ $deceasedPeople = $pdo->query("SELECT * FROM deceased ORDER BY last_name, first_
   <nav >
     <div class="logo">DECEASED RECORDS</div>
     <ul class="nav-links" id="navLinks">
-        <li><a href="dashboard.php">DASHBOARD</a></li>
+        <li><a href="pamanlinan.php">DASHBOARD</a></li>
             <li><a href="list.php">LISTS</a></li>
     
       <li><a href="logout.php">LOGOUT</a></li>

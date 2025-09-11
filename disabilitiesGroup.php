@@ -94,7 +94,7 @@ foreach ($people as $person) {
   <nav >
     <div class="logo">TYPES OF DISABILITY RECORDS</div>
     <ul class="nav-links" id="navLinks">
-        <li><a href="dashboard.php">DASHBOARD</a></li>
+        <li><a href="pamanlinan.php">DASHBOARD</a></li>
             <li><a href="list.php">LISTS</a></li>
     
       <li><a href="logout.php">LOGOUT</a></li>

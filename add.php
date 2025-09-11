@@ -216,7 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar">
       <div class="logo">Demographic Profiling System form</div>
       <ul class="nav-links">
-        <li><a href="dashboard.php">DASHBOARD</a></li>               
+        <li><a href="pamanlinan.php">DASHBOARD</a></li>               
         <li><a href="list.php">LIST</a></li>               
         <li><a href="logout.php">LOGOUT</a></li>
         
@@ -483,6 +483,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label>Family ID</label>
               <input type="text" name="family_id" required />
             </div>
+              <div>
+            <label>Low-income</label>
+              <input type="text" name="family_id" required />
+            </div>
+              <div>
+            <label>Owned</label>
+              <input type="text" name="family_id" required />
+            </div>
+              <div>
+            <label>Rented</label>
+              <input type="text" name="family_id" required />
+            </div>
+              <div>
+            <label>information settler</label>
+              <input type="text" name="family_id" required />
+            </div>
+            
     </div>
     </div>
 

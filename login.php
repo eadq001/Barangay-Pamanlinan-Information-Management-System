@@ -77,7 +77,7 @@ include("functions.php");
 		<div class="forms">
 			
 			<form method="post" class="form">
-  				<img src="logo-pamanlinan.png" alt="">
+  				<img src="pamanlinan-logo.png" alt="">
 				<h1>Sign in to Barangay Pamanlinan</h1><br>
 				<div class="username">
 					<label for="user_name">Username</label>
@@ -110,7 +110,7 @@ include("functions.php");
 				if (password_verify($password, $user_data['password'])) {
 
 					$_SESSION['user_id'] = $user_data['user_id'];
-					header("Location: list.php");
+					header("Location: dash.html");
 					die;
 				} else {
 					echo "<p style='color:red !important;'> wrong username or password!</p>";

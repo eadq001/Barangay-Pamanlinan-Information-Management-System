@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Household & Family Records</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<style>
+  .nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+nav{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+
+.nav-links a:hover {
+  background-color: rgb(139, 226, 217);
+  color: #000000;
+  font-weight: bolder;
+}
+
+</style>
+<body class="bg-gray-100">
+
+
+  <!-- HEADER -->
+  <header class="bg-blue-700 text-white p-4 shadow-lg">
+    <h1 class="text-2xl font-bold text-center">Household & Family Records</h1><br><br>
+      <nav>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="pamanlinan.php">DASHBOARD</a></li>
+      <li><a href="ageGroup.php">AGE GROUP</a></li>
+      <li><a href="disabilitiesGroup.php">DISABILITIES</a></li>
+      <li><a href="deceased.php">DECEASED</a></li>
+      <li><a href="add.php">ADD</a></li>
+      <li><a href="logout.php">LOGOUT</a></li>
+    </ul>
+  </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="p-6 max-w-5xl mx-auto">
+
+    <!-- FORM SECTION -->
+    <section class="bg-white p-6 rounded-2xl shadow-md mb-8">
+      <h2 class="text-xl font-semibold mb-4">Add Household Record</h2>
+      <form class="grid md:grid-cols-2 gap-4">
+
+        <!-- Family Head -->
+        <div>
+          <label class="block text-gray-700">Head of Family</label>
+          <input type="text" class="w-full p-2 border rounded-lg" placeholder="Enter full name" required>
+        </div>
+
+        <!-- Address -->
+        <div>
+          <label class="block text-gray-700">Address</label>
+          <input type="text" class="w-full p-2 border rounded-lg" placeholder="Enter address" required>
+        </div>
+
+        <!-- Household Type -->
+        <div>
+          <label class="block text-gray-700">Household Type</label>
+          <select class="w-full p-2 border rounded-lg">
+            <option value="">-- Select --</option>
+            <option value="low_income">Low-Income</option>
+            <option value="senior">Senior Citizen</option>
+            <option value="pwd">PWD</option>
+          </select>
+        </div>
+
+        <!-- Housing Status -->
+        <div>
+          <label class="block text-gray-700">Housing Status</label>
+          <select class="w-full p-2 border rounded-lg">
+            <option value="">-- Select --</option>
+            <option value="owned">Owned</option>
+            <option value="rented">Rented</option>
+            <option value="informal">Informal Settler</option>
+          </select>
+        </div>
+
+        <!-- Contact -->
+        <div>
+          <label class="block text-gray-700">Contact Number</label>
+          <input type="tel" class="w-full p-2 border rounded-lg" placeholder="09XXXXXXXXX">
+        </div>
+
+        <!-- Members Count -->
+        <div>
+          <label class="block text-gray-700">No. of Family Members</label>
+          <input type="number" class="w-full p-2 border rounded-lg" placeholder="e.g. 5" min="1">
+        </div>
+
+        <!-- Submit -->
+        <div class="md:col-span-2">
+          <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-800">
+            Save Record
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- RECORD LIST -->
+    <section class="bg-white p-6 rounded-2xl shadow-md">
+      <h2 class="text-xl font-semibold mb-4">Household Records</h2>
+
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="border p-2">#</th>
+              <th class="border p-2">Head of Family</th>
+              <th class="border p-2">Household Type</th>
+              <th class="border p-2">Housing Status</th>
+              <th class="border p-2">Members</th>
+              <th class="border p-2">Contact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border p-2 text-center">1</td>
+              <td class="border p-2">Juan Dela Cruz</td>
+              <td class="border p-2">Low-Income</td>
+              <td class="border p-2">Rented</td>
+              <td class="border p-2 text-center">4</td>
+              <td class="border p-2">09123456789</td>
+            </tr>
+            <tr>
+              <td class="border p-2 text-center">2</td>
+              <td class="border p-2">Maria Santos</td>
+              <td class="border p-2">Senior Citizen</td>
+              <td class="border p-2">Owned</td>
+              <td class="border p-2 text-center">2</td>
+              <td class="border p-2">09987654321</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-800 text-gray-200 text-center p-4 mt-6">
+    <p>&copy; 2025 Household Records System. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
