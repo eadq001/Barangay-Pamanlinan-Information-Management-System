@@ -138,6 +138,8 @@ $osyCounts = array_column($osyData, 'osy_count');
     <li><a href="disabilitiesGroup.php">DISABILITIES</a></li>
     <li><a href="deceased.php">DECEASED</a></li>
     <li><a href="list.php">MAIN LISTS</a></li>
+    <li><a href="bulletinBoard.php">BULLETIN BOARD</a></li>
+    <li><a href="cases/index.php">CASES AND INCIDENTS</a></li>
     <li><a href="add.php">REGISTRATION FORM</a></li>
     <li><a href="logout.php">LOGOUT</a></li>
   </ul>
