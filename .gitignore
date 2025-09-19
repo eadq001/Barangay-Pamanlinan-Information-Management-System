@@ -1,3 +1,4 @@
-#ignore all video files
+git#ignore all video files
 
 *.mp4
+*.rar
