@@ -20,11 +20,32 @@ if (!$post) {
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-  <div class="max-w-4xl mx-auto p-6">
+  <div class="max-w-3xl mx-auto p-6">
     <a href="bulletinBoard.php" class="text-blue-600">&larr; Back</a>
-    <h1 class="text-3xl font-bold mt-4"><?php echo htmlspecialchars($post['title']); ?></h1>
-    <div class="text-sm text-gray-600">Category: <?php echo htmlspecialchars($post['category']); ?> | Date: <?php echo htmlspecialchars($post['event_date'] ?: $post['created_at']); ?></div>
-    <div class="mt-6 bg-white p-6 rounded text-gray-800"><?php echo nl2br(htmlspecialchars($post['content'])); ?></div>
+    <div class="bg-white p-6 rounded mt-4">
+      <div>
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="font-semibold text-xl"><?php echo htmlspecialchars($post['title']); ?></div>
+            <div class="text-sm text-gray-500"><?php echo htmlspecialchars(date('M d, Y', strtotime($post['created_at']))); ?></div>
+          </div>
+          <div class="text-sm text-gray-600">
+            <?php if(isset($_SESSION['user_id'])): ?>
+              <a href="bulletin_edit.php?id=<?php echo $post['id']; ?>" class="mr-2">Edit</a>
+              <a href="bulletin_delete.php?id=<?php echo $post['id']; ?>" class="text-red-600" onclick="return confirm('Delete this post?')">Delete</a>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <?php if (!empty($post['image_path'])): ?>
+          <div class="mt-4 mb-4">
+            <img src="<?php echo htmlspecialchars($post['image_path']); ?>" alt="post image" class="w-full object-cover rounded" style="max-height:800px;" />
+          </div>
+        <?php endif; ?>
+
+        <div class="text-gray-800"><?php echo nl2br(htmlspecialchars($post['content'])); ?></div>
+      </div>
+    </div>
   </div>
 </body>
 </html>

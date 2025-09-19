@@ -51,21 +51,31 @@ $result = mysqli_query($con, $query);
           <div class="bg-white p-6 rounded card">No posts found.</div>
         <?php else: ?>
           <?php while($row = mysqli_fetch_assoc($result)): ?>
-            <article class="bg-white p-6 rounded mb-4 card">
-              <div class="flex justify-between items-start">
+            <article class="bg-white p-4 rounded mb-4 card">
+              <div>
                 <div>
                   <h3 class="text-lg font-bold"><?php echo htmlspecialchars($row['title']); ?></h3>
-                  <div class="text-sm text-gray-500">Category: <?php echo htmlspecialchars($row['category']); ?> | Date: <?php echo htmlspecialchars($row['event_date'] ?: $row['created_at']); ?></div>
+                  <div class="text-sm text-gray-500">Category: <?php echo htmlspecialchars($row['category']); ?> • <?php echo htmlspecialchars(date('M d, Y', strtotime($row['created_at']))); ?></div>
                 </div>
-                <div class="text-right">
-                  <a href="bulletin_view.php?id=<?php echo $row['id']; ?>" class="text-blue-600 mr-2">View</a>
+
+                <?php if (!empty($row['image_path'])): ?>
+                  <div class="mt-3 rounded overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($row['image_path']); ?>" alt="post image" class="w-full object-cover" style="max-height:600px;" />
+                  </div>
+                <?php endif; ?>
+
+                <div class="mt-3 text-gray-700">
+                  <p><?php echo nl2br(htmlspecialchars(substr($row['content'], 0, 800))); ?><?php echo (strlen($row['content'])>800)?'...':''; ?></p>
+                </div>
+
+                <div class="mt-3 text-sm text-gray-600">
+                  <a href="bulletin_view.php?id=<?php echo $row['id']; ?>" class="mr-3">View</a>
                   <?php if($isLoggedIn): ?>
-                    <a href="bulletin_edit.php?id=<?php echo $row['id']; ?>" class="text-yellow-600 mr-2">Edit</a>
+                    <a href="bulletin_edit.php?id=<?php echo $row['id']; ?>" class="mr-3">Edit</a>
                     <a href="bulletin_delete.php?id=<?php echo $row['id']; ?>" class="text-red-600" onclick="return confirm('Delete this post?')">Delete</a>
                   <?php endif; ?>
                 </div>
               </div>
-              <p class="mt-3 text-gray-700"><?php echo nl2br(htmlspecialchars(substr($row['content'], 0, 400))); ?><?php echo (strlen($row['content'])>400)?'...':''; ?></p>
             </article>
           <?php endwhile; ?>
         <?php endif; ?>

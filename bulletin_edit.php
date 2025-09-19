@@ -25,9 +25,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$title) $errors[] = 'Title is required.';
     if (!$content) $errors[] = 'Content is required.';
 
-    if (empty($errors)) {
-        $e_date_sql = $event_date ? "event_date = '{$event_date}'," : "event_date = NULL,";
-        $sql = "UPDATE bulletins SET title = '{$title}', content = '{$content}', category = '{$category}', {$e_date_sql} updated_at = NOW() WHERE id = {$id} LIMIT 1";
+  // Handle image upload or removal
+  $new_image_path = $post['image_path'];
+  if (isset($_POST['remove_image']) && $_POST['remove_image'] == '1') {
+    // remove existing
+    if (!empty($post['image_path']) && file_exists(__DIR__ . '/' . $post['image_path'])) {
+      @unlink(__DIR__ . '/' . $post['image_path']);
+    }
+    $new_image_path = null;
+  }
+
+  if (!empty($_FILES['image']['name'])) {
+    $allowed = ['image/jpeg','image/png','image/gif'];
+    if (in_array($_FILES['image']['type'], $allowed) && $_FILES['image']['size'] <= 2 * 1024 * 1024) {
+      // remove old if exists
+      if (!empty($post['image_path']) && file_exists(__DIR__ . '/' . $post['image_path'])) {
+        @unlink(__DIR__ . '/' . $post['image_path']);
+      }
+      $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+      $filename = uniqid('b_') . '.' . $ext;
+      $dest = __DIR__ . '/uploads/bulletins/' . $filename;
+      if (move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
+        $new_image_path = 'uploads/bulletins/' . $filename;
+      }
+    } else {
+      $errors[] = 'Invalid image (only JPG/PNG/GIF, max 2MB).';
+    }
+  }
+
+  if (empty($errors)) {
+    $e_date_sql = $event_date ? "event_date = '{$event_date}'," : "event_date = NULL,";
+    $img_sql = $new_image_path ? "image_path = '" . mysqli_real_escape_string($con, $new_image_path) . "'," : "image_path = NULL,";
+    $sql = "UPDATE bulletins SET title = '{$title}', content = '{$content}', category = '{$category}', {$e_date_sql} {$img_sql} updated_at = NOW() WHERE id = {$id} LIMIT 1";
         if (mysqli_query($con, $sql)) {
             header('Location: bulletinBoard.php');
             exit;
@@ -55,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     <?php endif; ?>
 
-    <form method="post" class="bg-white p-6 rounded">
+  <form method="post" enctype="multipart/form-data" class="bg-white p-6 rounded">
       <label class="block mb-2">Title</label>
       <input name="title" value="<?php echo htmlspecialchars($post['title']); ?>" class="w-full border p-2 rounded mb-3" />
 
@@ -71,6 +100,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <label class="block mb-2">Content</label>
       <textarea name="content" rows="8" class="w-full border p-2 rounded mb-3"><?php echo htmlspecialchars($post['content']); ?></textarea>
+
+      <?php if (!empty($post['image_path'])): ?>
+        <div class="mb-3">
+          <img src="<?php echo htmlspecialchars($post['image_path']); ?>" style="max-width:200px; display:block;" alt="current image" />
+          <label><input type="checkbox" name="remove_image" value="1" /> Remove image</label>
+        </div>
+      <?php endif; ?>
+
+      <label class="block mb-2">Replace Image (optional)</label>
+      <input type="file" name="image" accept="image/*" class="mb-3" />
 
       <div class="flex gap-2">
         <button class="bg-yellow-600 text-white px-4 py-2 rounded">Update</button>
