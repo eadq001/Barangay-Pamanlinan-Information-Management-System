@@ -25,6 +25,7 @@ $result = mysqli_query($con, $query);
       <h1 class="text-xl font-bold">Barangay Bulletin Board</h1>
       <nav class="space-x-4">
         <a class="font-semibold" href="pamanlinan.php">Dashboard</a>
+        <a class="font-semibold" href="cases/index.php">Cases</a>
         <?php if($isLoggedIn): ?>
           <a class="bg-white text-green-700 px-3 py-1 rounded" href="bulletin_create.php">Create Post</a>
           <a class="" href="logout.php">Logout</a>
