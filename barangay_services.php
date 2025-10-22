@@ -1,3 +1,29 @@
+<?php
+// --- DATABASE CONNECTION ---
+$pdo = new PDO('mysql:host=localhost;dbname=pamanlinan_db', 'root', '', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
+
+// --- HANDLE FORM SUBMISSION ---
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name     = $_POST['resident_name'];
+    $address  = $_POST['address'];
+    $category = $_POST['service_category'];
+    $sub      = $_POST['sub_service'];
+    $date     = $_POST['service_date'];
+    $contact  = $_POST['contact'];
+
+    $stmt = $pdo->prepare("INSERT INTO service_records 
+        (resident_name, address, category, sub_service, service_date, contact) 
+        VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$name, $address, $category, $sub, $date, $contact]);
+}
+
+// --- FETCH ALL RECORDS ---
+$stmt = $pdo->query("SELECT * FROM service_records ORDER BY id DESC");
+$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,51 +35,47 @@
 
 <style>
   .nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-}
-nav{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-}
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  padding: 4px 8px;
-  border-radius: 3px;
-  transition: all 0.3s;
-}
-
-.nav-links a:hover {
-  background-color: rgb(139, 226, 217);
-  color: #000000;
-  font-weight: bolder;
-}
-
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    border-radius: 3px;
+    transition: all 0.3s;
+  }
+  .nav-links a:hover {
+    background-color: rgb(139, 226, 217);
+    color: #000000;
+    font-weight: bolder;
+  }
 </style>
-
-
 
 <body class="bg-gray-100">
 
   <!-- HEADER -->
   <header class="bg-green-700 text-white p-4 shadow-lg">
-    <h1 class="text-2xl font-bold text-center">Barangay Services Management</h1><br><br>
+    <h1 class="text-2xl font-bold text-center">PAMANLINAN SERVICES MANAGEMENT RECORDS</h1><br><br>
     <nav>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="pamanlinan.php">DASHBOARD</a></li>
-      <li><a href="ageGroup.php">AGE GROUP</a></li>
-      <li><a href="disabilitiesGroup.php">DISABILITIES</a></li>
-      <li><a href="deceased.php">DECEASED</a></li>
-      <li><a href="add.php">ADD</a></li>
-      <li><a href="logout.php">LOGOUT</a></li>
-    </ul>
-  </nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="pamanlinan.php">DASHBOARD</a></li>
+        <li><a href="ageGroup.php">AGE GROUP</a></li>
+        <li><a href="disabilitiesGroup.php">DISABILITIES</a></li>
+        <li><a href="deceased.php">DECEASED</a></li>
+        <li><a href="barangay_services.php">ADD SERVICE</a></li>
+        <li><a href="logout.php">LOGOUT</a></li>
+      </ul>
+    </nav>
   </header>
 
   <!-- MAIN CONTENT -->
@@ -62,24 +84,24 @@ nav{
     <!-- FORM SECTION -->
     <section class="bg-white p-6 rounded-2xl shadow-md mb-8">
       <h2 class="text-xl font-semibold mb-4">Record a Service</h2>
-      <form class="grid md:grid-cols-2 gap-4">
+      <form method="POST" class="grid md:grid-cols-2 gap-4">
 
         <!-- Resident Name -->
         <div>
           <label class="block text-gray-700">Resident Name</label>
-          <input type="text" class="w-full p-2 border rounded-lg" placeholder="Enter full name" required>
+          <input type="text" name="resident_name" class="w-full p-2 border rounded-lg" placeholder="Enter full name" required>
         </div>
 
         <!-- Address -->
         <div>
           <label class="block text-gray-700">Address</label>
-          <input type="text" class="w-full p-2 border rounded-lg" placeholder="Enter address" required>
+          <input type="text" name="address" class="w-full p-2 border rounded-lg" placeholder="Enter address" required>
         </div>
 
         <!-- Service Category -->
         <div>
           <label class="block text-gray-700">Service Category</label>
-          <select id="serviceCategory" class="w-full p-2 border rounded-lg" onchange="updateSubservices()">
+          <select id="serviceCategory" name="service_category" class="w-full p-2 border rounded-lg" onchange="updateSubservices()" required>
             <option value="">-- Select --</option>
             <option value="health">Health Services</option>
             <option value="social">Social Services</option>
@@ -90,7 +112,7 @@ nav{
         <!-- Sub-service -->
         <div>
           <label class="block text-gray-700">Sub-Service</label>
-          <select id="subService" class="w-full p-2 border rounded-lg">
+          <select id="subService" name="sub_service" class="w-full p-2 border rounded-lg" required>
             <option value="">-- Select Category First --</option>
           </select>
         </div>
@@ -98,13 +120,13 @@ nav{
         <!-- Date -->
         <div>
           <label class="block text-gray-700">Date of Service</label>
-          <input type="date" class="w-full p-2 border rounded-lg" required>
+          <input type="date" name="service_date" class="w-full p-2 border rounded-lg" required>
         </div>
 
         <!-- Contact -->
         <div>
           <label class="block text-gray-700">Contact Number</label>
-          <input type="tel" class="w-full p-2 border rounded-lg" placeholder="09XXXXXXXXX">
+          <input type="tel" name="contact" class="w-full p-2 border rounded-lg" placeholder="09XXXXXXXXX" required>
         </div>
 
         <!-- Submit -->
@@ -126,6 +148,7 @@ nav{
             <tr>
               <th class="border p-2">#</th>
               <th class="border p-2">Resident</th>
+              <th class="border p-2">Address</th>
               <th class="border p-2">Category</th>
               <th class="border p-2">Sub-Service</th>
               <th class="border p-2">Date</th>
@@ -133,22 +156,23 @@ nav{
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="border p-2 text-center">1</td>
-              <td class="border p-2">Ana Reyes</td>
-              <td class="border p-2">Health Services</td>
-              <td class="border p-2">Immunization</td>
-              <td class="border p-2 text-center">2025-09-01</td>
-              <td class="border p-2">09123456789</td>
-            </tr>
-            <tr>
-              <td class="border p-2 text-center">2</td>
-              <td class="border p-2">Pedro Santos</td>
-              <td class="border p-2">Social Services</td>
-              <td class="border p-2">Assistance for Senior Citizens</td>
-              <td class="border p-2 text-center">2025-09-05</td>
-              <td class="border p-2">09987654321</td>
-            </tr>
+            <?php if (count($records) > 0): ?>
+              <?php foreach ($records as $row): ?>
+                <tr>
+                  <td class="border p-2 text-center"><?= htmlspecialchars($row['id']) ?></td>
+                  <td class="border p-2"><?= htmlspecialchars($row['resident_name']) ?></td>
+                  <td class="border p-2"><?= htmlspecialchars($row['address']) ?></td>
+                  <td class="border p-2"><?= htmlspecialchars($row['category']) ?></td>
+                  <td class="border p-2"><?= htmlspecialchars($row['sub_service']) ?></td>
+                  <td class="border p-2 text-center"><?= htmlspecialchars($row['service_date']) ?></td>
+                  <td class="border p-2"><?= htmlspecialchars($row['contact']) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="7" class="border p-2 text-center">No records yet.</td>
+              </tr>
+            <?php endif; ?>
           </tbody>
         </table>
       </div>
@@ -158,7 +182,7 @@ nav{
 
   <!-- FOOTER -->
   <footer class="bg-gray-800 text-gray-200 text-center p-4 mt-6">
-    <p>&copy; 2025 Barangay Services Management. All Rights Reserved.</p>
+    <!-- <p>&copy; 2025 Barangay Services Management. All Rights Reserved.</p> -->
   </footer>
 
   <!-- SCRIPT -->

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barangay Pamanlinan Dashboard</title>
+<link rel="shortcut icon" href="pamanlinan.png" type="image/x-icon">
+<style>
+/* ====== COLOR VARIABLES ====== */
+:root {
+  --primary: #0b6b2d;
+  --primary-dark: #034b13;
+  --background: #f3f7f4;
+  --white: #ffffff;
+  --text: #333333;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ====== RESET ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ====== HEADER ====== */
+header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+header h1 {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+nav a {
+  color: var(--white);
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+nav a:hover {
+  color: #ccebc5;
+}
+
+/* ====== MAIN DASHBOARD ====== */
+main {
+  flex: 1;
+  padding: 2rem 3%;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* ====== CARD DESIGN ====== */
+.card {
+  background: var(--white);
+  border-radius: 15px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-top: 6px solid var(--primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+.card img {
+  width: 80px;
+  margin-bottom: 1rem;
+}
+.card h3 {
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+.card p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* ====== FOOTER ====== */
+footer {
+  background: var(--primary);
+  color: var(--white);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Barangay Pamanlinan Information System</h1>
+  <nav>
+    <a href="#">Dashboard</a>
+    <a href="#">Records</a>
+    <a href="#">Reports</a>
+    <a href="#">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <section class="dashboard">
+    <div class="card">
+      <img src="icons/service.png" alt="Services">
+      <h3>Services Management</h3>
+      <p>Record and manage health, social, and relief services provided by the barangay.</p>
+    </div>
+
+    <div class="card">
+      <img src="icons/house.png" alt="Household">
+      <h3>Household Profiling</h3>
+      <p>Monitor household demographics and manage residential information.</p>
+    </div>
+
+    <div class="card">
+      <img src="icons/people.png" alt="Population">
+      <h3>Population Records</h3>
+      <p>Keep accurate and updated personal and demographic records of residents.</p>
+    </div>
+
+    <div class="card">
+      <img src="icons/reports.png" alt="Reports">
+      <h3>Reports</h3>
+      <p>Generate reports and analytics for transparency and decision-making.</p>
+    </div>
+
+    <div class="card">
+      <img src="icons/settings.png" alt="Settings">
+      <h3>System Settings</h3>
+      <p>Manage system configuration, accounts, and administrative options.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 Barangay Pamanlinan | All Rights Reserved
+</footer>
+
+</body>
+</html>

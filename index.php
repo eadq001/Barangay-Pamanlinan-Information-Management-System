@@ -273,8 +273,8 @@ if (!empty($_SESSION['user_id'])) {
 
   <section class="profile-section">
     <img src="pamanlinan.png" alt="Profile Pic" class="profile-pic" />
-    <h1>Barangay Pamanlinan</h1>
-    <h2>Demographic Profiling System</h2><br>
+    <h1>BARANGAY PAMANLINAN</h1>
+    <h2>INFORMATION MANAGEMENT SYSTEM</h2><br>
     <div class="btn">
       <a href="login.php" class="fancy-button">LOGIN</a>
        <a href="about.html" class="fancy-button" style="display:none;">ABOUT</a>

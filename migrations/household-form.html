@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Household Housing Form</title>
+  <style>
+    /* --- Page & Background --- */
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a5e3c;     /* deep government-green background */
+      padding: 20px;
+      margin: 0;
+    }
+
+    /* --- Main Container --- */
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      background: #f9fff8;     /* very light greenish panel */
+      padding: 20px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* two columns */
+      gap: 30px;
+      /* height removed to avoid clipping */
+      /* overflow removed to allow full content */
+    }
+
+    /* --- Header --- */
+    .header {
+      grid-column: span 2;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #114f2e;
+    }
+    .header p {
+      margin: 4px 0;
+      color: #1a5e3c;
+      font-weight: bold;
+    }
+
+    /* --- Sections --- */
+    .section h2 {
+      color: #1a5e3c;
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+    label {
+      display: block;
+      margin: 4px 0;
+      line-height: 1.3;
+    }
+    input[type="text"] {
+      margin-left: 5px;
+      padding: 4px;
+    }
+
+    /* --- Button --- */
+    button {
+      grid-column: span 2;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #1a5e3c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+      width: 30%;  /* button width reduced to 50% */
+        justify-self: center;  /* center the button */
+    }
+    button:hover {
+      background: #145331;
+      
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr; /* single column on small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <form class="container">
+    <div class="header">
+      <h1>Household Housing Form</h1>
+      <p>
+        Republic of the Philippines • Province of Surigao del Sur<br>
+        City of Bislig • Barangay Pamanlinan
+      </p>
+    </div>
+
+    <!-- Type of Building -->
+    <div class="section">
+      <h2>Type of Building/House</h2>
+      <label><input type="checkbox"> Single House</label>
+      <label><input type="checkbox"> Duplex</label>
+      <label><input type="checkbox"> Apartment/Accessoria/Rowhouse/Townhouse</label>
+      <label><input type="checkbox"> Commercial/Industrial/Agricultural Building used as dwelling unit</label>
+      <label><input type="checkbox"> Institutional living quarter (school dormitory, hospital, etc.)</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Roof Materials -->
+    <div class="section">
+      <h2>Construction Materials of the Roof</h2>
+      <label><input type="checkbox"> Strong materials (Galvanized iron/Aluminum/Tile/Concrete/Clay tile/Asbestos)</label>
+      <label><input type="checkbox"> Light materials (Cogon/Nipa/Anahaw)</label>
+      <label><input type="checkbox"> Salvaged/Makeshift/Improvised materials</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Outer Wall Materials -->
+    <div class="section">
+      <h2>Outer Wall Materials</h2>
+      <label><input type="checkbox"> Strong materials (Concrete/Brick/Stone/Wood)</label>
+      <label><input type="checkbox"> Light materials (Bamboo/Salvaged materials)</label>
+      <label><input type="checkbox"> Makeshift/Improvised materials</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- State of Repair -->
+    <div class="section">
+      <h2>State of Repair</h2>
+      <label><input type="checkbox"> Needs no repair</label>
+      <label><input type="checkbox"> Needs minor repair</label>
+      <label><input type="checkbox"> Needs major repair</label>
+      <label><input type="checkbox"> Dilapidated/Condemned</label>
+      <label><input type="checkbox"> Under construction</label>
+      <label><input type="checkbox"> Unfinished construction</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Floor Area -->
+    <div class="section">
+      <h2>Floor Area</h2>
+      <label><input type="checkbox"> Below 10 sq. m</label>
+      <label><input type="checkbox"> 10-19 sq. m</label>
+      <label><input type="checkbox"> 20-29 sq. m</label>
+      <label><input type="checkbox"> 30-39 sq. m</label>
+      <label><input type="checkbox"> 40-49 sq. m</label>
+      <label><input type="checkbox"> 50-69 sq. m</label>
+      <label><input type="checkbox"> 70-99 sq. m</label>
+      <label><input type="checkbox"> 100 sq. m and over</label>
+    </div>
+
+    <!-- Year Built -->
+    <div class="section">
+      <h2>Year Built</h2>
+      <label><input type="checkbox"> 2000 & later</label>
+      <label><input type="checkbox"> 1991-2000</label>
+      <label><input type="checkbox"> 1981-1990</label>
+      <label><input type="checkbox"> 1971-1980</label>
+      <label><input type="checkbox"> 1961-1970</label>
+      <label><input type="checkbox"> 1960 & earlier</label>
+    </div>
+
+    <!-- Monthly Rental -->
+    <div class="section">
+      <h2>Monthly Rental</h2>
+      <label><input type="checkbox"> None (Owned)</label>
+      <label><input type="checkbox"> Below PHP 1000</label>
+      <label><input type="checkbox"> PHP 1001 - 3000</label>
+      <label><input type="checkbox"> PHP 3001 - 5000</label>
+      <label><input type="checkbox"> PHP 5001 - 10000</label>
+      <label><input type="checkbox"> PHP 10001 and over</label>
+    </div>
+
+    <!-- Source of Income -->
+    <div class="section">
+      <h2>Source of Income</h2>
+      <label><input type="checkbox"> Wages/Salary</label>
+      <label><input type="checkbox"> Entrepreneurial activities</label>
+      <label><input type="checkbox"> Domestic household activities</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Tenure Status -->
+    <div class="section">
+      <h2>Tenure Status</h2>
+      <label><input type="checkbox"> Owned/being amortized by owner</label>
+      <label><input type="checkbox"> Rented</label>
+      <label><input type="checkbox"> Rent-free with consent of owner</label>
+      <label><input type="checkbox"> Rent-free without consent of owner</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Acquisition -->
+    <div class="section">
+      <h2>Acquisition of Unit</h2>
+      <label><input type="checkbox"> Purchased</label>
+      <label><input type="checkbox"> Constructed by owner</label>
+      <label><input type="checkbox"> Government housing program</label>
+      <label><input type="checkbox"> Inherited</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Electricity Source -->
+    <div class="section">
+      <h2>Electricity Source</h2>
+      <label><input type="checkbox"> Solar</label>
+      <label><input type="checkbox"> Generator</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Fuel for Cooking -->
+    <div class="section">
+      <h2>Fuel for Cooking</h2>
+      <label><input type="checkbox"> LPG</label>
+      <label><input type="checkbox"> Kerosene</label>
+      <label><input type="checkbox"> Wood</label>
+      <label><input type="checkbox"> Others (Specify)<input type="text"></label>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit">Submit</button>
+  </form>
+
+</body>
+</html>

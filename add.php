@@ -1,85 +1,67 @@
 <?php
-//page can't be accessed when not logged in
 session_start();
 if (empty($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
 
-// Connection to database
+// Database connection
 $conn = new mysqli("localhost", "root", "", "pamanlinan_db");
-
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$currentYear = date('Y'); // Current year for display
-
-// Function to calculate age from date of birth
+// Calculate age
 function calculate_age($dob) {
     $birthDate = new DateTime($dob);
     $today = new DateTime('today');
     return $birthDate->diff($today)->y;
 }
 
-// Handle POST submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect and sanitize form inputs
-    $first_name = trim($_POST['first_name']);
-    $last_name = trim($_POST['last_name']);
-    $middle_name = trim($_POST['middle_name']);
-    $ext_name = trim($_POST['ext_name']);
-    $sex_name = $_POST['sex_name'];
-    $date_of_birth = $_POST['date_of_birth'];
-    $age = calculate_age($date_of_birth); // Calculate age dynamically
-    $civil_status = $_POST['civil_status'];
-    $place_of_birth = trim($_POST['place_of_birth']);
-    $street_name = trim($_POST['street_name']);
-    $purok_name = trim($_POST['purok_name']);
-    $cellphone_no = trim($_POST['cellphone_no']);
-    $facebook = trim($_POST['facebook']);
-    $employed_unemployed = trim($_POST['employed_unemployed']);
-    $occupation = trim($_POST['occupation']);
-    $solo_parent = $_POST['solo_parent'];
-    $ofw = trim($_POST['ofw']);
-    $school_youth = $_POST['school_youth'];
-    $pwd = trim($_POST['pwd']);
-    $indigenous = trim($_POST['indigenous']);
-    $citizenship = trim($_POST['citizenship']);
-    $toilet = $_POST['toilet'];
-    $womens_association = $_POST['womens_association'];
-    $valid_id = trim($_POST['valid_id']);
-    $type_id = trim($_POST['type_id']);
-    $household_id = trim($_POST['household_id']);
-    $family_id = trim($_POST['family_id']);
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $fields = [
+        'first_name', 'last_name', 'middle_name', 'ext_name', 'sex_name',
+        'date_of_birth', 'civil_status', 'place_of_birth', 'street_name', 'purok_name',
+        'cellphone_no', 'facebook', 'employed_unemployed', 'occupation', 'solo_parent',
+        'ofw', 'school_youth', 'pwd', 'indigenous', 'citizenship', 'toilet',
+        'womens_association', 'valid_id', 'type_id', 'household_id', 'family_id'
+    ];
 
-    // Check for duplicates
+    foreach ($fields as $field) {
+        $$field = isset($_POST[$field]) ? trim($_POST[$field]) : '';
+    }
+
+    $age = calculate_age($date_of_birth);
+
     $stmt = $conn->prepare("SELECT id FROM people WHERE first_name = ? AND last_name = ? AND middle_name = ?");
     $stmt->bind_param("sss", $first_name, $last_name, $middle_name);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        echo "<script>alert('Duplicate entry: This name already exists.');</script>";
+        $message = "Duplicate entry: This name already exists.";
     } else {
-        // Proceed to insert
-        $insert = $conn->prepare("INSERT INTO people (
+        $sql = "INSERT INTO people (
             first_name, last_name, middle_name, ext_name, sex_name, date_of_birth, age, civil_status,
-            place_of_birth, street_name, purok_name, cellphone_no, facebook, employed_unemployed, occupation,
-            solo_parent, ofw, school_youth, pwd, indigenous, citizenship, toilet, womens_association, valid_id, type_id, household_id,family_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            place_of_birth, street_name, purok_name, cellphone_no, facebook, employed_unemployed,
+            occupation, solo_parent, ofw, school_youth, pwd, indigenous, citizenship,
+            toilet, womens_association, valid_id, type_id, household_id, family_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $insert->bind_param("ssssssissssssssssssssssssss",
+        $insert = $conn->prepare($sql);
+        $insert->bind_param(
+            "ssssssissssssssssssssssssss",
             $first_name, $last_name, $middle_name, $ext_name, $sex_name, $date_of_birth, $age, $civil_status,
-            $place_of_birth, $street_name, $purok_name, $cellphone_no, $facebook, $employed_unemployed, $occupation,
-            $solo_parent, $ofw, $school_youth, $pwd, $indigenous, $citizenship, $toilet, $womens_association, $valid_id, $type_id, $household_id, $family_id
+            $place_of_birth, $street_name, $purok_name, $cellphone_no, $facebook, $employed_unemployed,
+            $occupation, $solo_parent, $ofw, $school_youth, $pwd, $indigenous, $citizenship,
+            $toilet, $womens_association, $valid_id, $type_id, $household_id, $family_id
         );
 
         if ($insert->execute()) {
-            echo "<script>alert('Data saved successfully.'); window.location.href='list.php';</script>";
+            $message = "Data saved successfully.";
+            $success = true;
         } else {
-            echo "<script>alert('Error saving data: " . $insert->error . "');</script>";
+            $message = "Error saving data: " . $insert->error;
         }
 
         $insert->close();
@@ -89,450 +71,295 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Brgy. Pamanlinan | Add Person</title>
-  <link rel="stylesheet" href="font.css" />
-  <link rel="stylesheet" href="add.css" />
-  <link rel="stylesheet" href="nav.css">
-  <link rel="shortcut icon" href="pamanlinan.png" type="image/x-icon">
-  <style>
-    body {
-      background: linear-gradient(to right, #6ca0a3, #ffffff);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-    }
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      background-color: #055c61;
-      padding: 1.5rem;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      color: white;
-    }
-    .nav-links {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-    }
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-weight: 700;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    form {
-      background-color: #fff;
-      max-width: 960px;
-      margin: 2rem auto;
-      margin-top: 100px;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      color: rgb(1, 180, 13);
-      margin-left: 32%;
-      font-size: 2rem;
-      padding-bottom: 0.5rem;
-      text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.89);
-    }
-    h2 {
-      color: #055c61;
-      margin: 2rem 0 1rem;
-      font-size: 1.5rem;
-      border-bottom: 2px solid #00408033;
-      padding-bottom: 0.5rem;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.39);
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    label {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 0.4rem;
-      color: #333;
-    }
-    input,
-    select {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid lightslategray;
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-    input:focus,
-    select:focus {
-      border-color: rgba(3, 19, 34, 0.35);
-      outline: none;
-    }
-    button[type='submit'] {
-      margin-top: 2rem;
-      background-color: #055c61;
-      color: white;
-      padding: 0.75rem 2rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    button[type='submit']:hover {
-      background-color: #003060;
-    }
-    .current-year {
-      text-align: center;
-      margin: 10px;
-      font-weight: bold;
-      color: #055c61;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barangay Pamanlinan | Registration Form</title>
+<link rel="shortcut icon" href="pamanlinan.png" type="image/x-icon">
+<style>
+body {
+  background: linear-gradient(to right, #d7e8e9, #ffffff);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  color: #333;
+  scroll-behavior: smooth;
+}
+
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background-color: #0d5c63;
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+.nav-links a:hover {
+  background: rgba(255,255,255,0.2);
+  color: gold;
+}
+
+/* Form Design */
+form {
+  background: #fff;
+  max-width: 950px;
+  margin: 160px auto;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1;
+}
+
+h1 {
+  color: #0d5c63;
+  text-align: center;
+  font-size: 1.9rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  color: #085458;
+  border-bottom: 2px solid #cce1e2;
+  padding-bottom: 0.5rem;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+input, select {
+  width: 90%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.3s;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: #0d5c63;
+  box-shadow: 0 0 5px rgba(13,92,99,0.3);
+}
+
+button {
+  display: block;
+  margin: 2rem auto 0;
+  background-color: #0d5c63;
+  color: #fff;
+  padding: 0.8rem 2.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+button:hover {
+  background-color: #08484d;
+}
+
+/* Checkbox group */
+.checkbox-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafa;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+input[type="radio"], input[type="checkbox"] {
+  accent-color: #0d5c63;
+  transform: scale(1.1);
+}
+
+/* MODAL DESIGN */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+.modal-content h3 {
+  color: #0d5c63;
+  margin-bottom: 1rem;
+}
+.modal-content button {
+  background: #0d5c63;
+  border: none;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.modal-content button:hover {
+  background: #08484d;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <nav class="navbar">
-      <div class="logo">Demographic Profiling System form</div>
-      <ul class="nav-links">
-        <li><a href="pamanlinan.php">DASHBOARD</a></li>               
-        <li><a href="list.php">LIST</a></li>               
-        <li><a href="logout.php">LOGOUT</a></li>
-        
-      </ul>
-    </nav>
-  </header>
-  
-   
+<header>
+  <div class="logo">Barangay Pamanlinan Registration</div>
+  <ul class="nav-links">
+    <li><a href="pamanlinan.php">DASHBOARD</a></li>
+    <li><a href="list.php">MAIN RECORDS</a></li>
+    <li><a href="logout.php">LOGOUT</a></li>
+  </ul>
+</header>
 
-  <div class="current-year">Current Year: <?= $currentYear ?></div>
+<form method="post" autocomplete="off">
+  <h1>Resident Registration Form</h1>
+  <h2>Personal Information</h2>
+  <div class="grid">
+    <input type="text" name="last_name" placeholder="Last Name" required>
+    <input type="text" name="first_name" placeholder="First Name" required>
+    <input type="text" name="middle_name" placeholder="Middle Name" required>
+    <input type="text" name="ext_name" list="ext-options" placeholder="Extension Name">
+  </div>
 
-  <form method="post" autocomplete="off">
-    <h1>REGISTRATION FORM</h1>
+  <datalist id="ext-options">
+    <option value="N/A"><option value="Jr."><option value="Sr."><option value="II">
+    <option value="III"><option value="IV"><option value="Other">
+  </datalist>
 
-    <h2>Personal Information</h2>
-    <div class="grid">
-      <div>
-        <label>Last Name</label>
-        <input type="text" name="last_name" required />
-      </div>
-      <div>
-        <label>First Name</label>
-        <input type="text" name="first_name" required />
-      </div>
-      <div>
-        <label>Middle Name</label>
-        <input type="text" name="middle_name" />
-      </div>
-      <div>
-        <label>Extension Name</label>
-        <input
-          type="text"
-          name="ext_name"
-          list="ext-options"
-          placeholder="Select or type extension"
-        />
-      </div>
-      <datalist id="ext-options">
-        <option value="N/A"></option>
-        <option value="Jr."></option>
-        <option value="Sr."></option>
-        <option value="II"></option>
-        <option value="III"></option>
-        <option value="IV"></option>
-        <option value="Other"></option>
-      </datalist>
-      <div>
-        <label>Sex</label>
-        <select name="sex_name" required>
-          <option value="">-- Select --</option>
-          <option>Male</option>
-          <option>Female</option>
-        </select>
-      </div>
-      <div>
-        <label>Birthdate</label>
-        <input type="text" name="date_of_birth" id="date_of_birth" required placeholder="MM/DD/YYYY" maxlength="10" pattern="\d{2}/\d{2}/\d{4}">
-        <small style="color:#055c61;">Format: MM/DD/YYYY</small>
-      </div>
-      <!-- Age input removed because it will be calculated automatically -->
-      <div>
-        <label>Civil Status</label>
-        <select name="civil_status" required>
-          <option value="">-- Select --</option>
-          <option>N/A</option>
-          <option>Single</option>
-          <option>Married</option>
-          <option>Widowed</option>
-          <option>Separated</option>
-          <option>Divorced</option>
-          <option>Common Law</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <script>
-      // Birthdate input validation: only numbers and slashes, MM/DD/YYYY format
-      document.addEventListener('DOMContentLoaded', function() {
-        const dobInput = document.getElementById('date_of_birth');
-        dobInput.addEventListener('input', function(e) {
-          // Allow only numbers and slashes
-          this.value = this.value.replace(/[^0-9/]/g, '');
-        });
-        dobInput.addEventListener('blur', function() {
-          // Validate MM/DD/YYYY format
-          const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
-          if (this.value && !regex.test(this.value)) {
-            // Show alert and clear the value so alert doesn't persist
-            alert('Please enter a valid date in MM/DD/YYYY format.');
-            this.value = '';
-            this.focus();
-          }
-        });
-      });
-      </script>
-      <div>
-        <label>Place of Birth</label>
-        <input type="text" name="place_of_birth" required />
+  <div class="grid">
+    <div>
+      <label>Sex</label>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="radio" name="sex_name" value="Male" required> Male</label>
+        <label class="checkbox-option"><input type="radio" name="sex_name" value="Female"> Female</label>
       </div>
     </div>
+    <input type="date" name="date_of_birth" required>
+    <input type="text" name="place_of_birth" placeholder="Place of Birth" required>
+    <input type="text" name="civil_status" placeholder="Civil Status" required>
+  </div>
 
-    <h2>Address & Contact</h2>
-    <div class="grid">
-      <div>
-        <label>Street Name</label>
-        <input type="text" name="street_name"  />
-      </div>
-      <div>
-        <label>Purok Name</label>
-          <select name="purok_name" required>
-            <option value="Purok 1">Purok 1</option>
-            <option value="Purok 2A">Purok 2A</option>
-            <option value="Purok 2B">Purok 2B</option>
-            <option value="Purok 3">Purok 3</option>
-            <option value="Purok 4">Purok 4</option>
-            <option value="Purok 5">Purok 5</option>
-            <option value="Purok 6">Purok 6</option>
-          </select>
-      </div>
-      <div>
-        <label>Contact No.</label>
-        <input type="tel" name="cellphone_no"  />
-      </div>
-      <div>
-        <label>Facebook Account</label>
-        <input type="text" name="facebook" />
-      </div>
-    </div>
+  <h2>Address & Contact</h2>
+  <div class="grid">
+    <input type="text" name="street_name" placeholder="Street Name">
+    <select name="purok_name" required>
+      <option value="">Select Purok</option>
+      <option value="Purok 1">Purok 1</option>
+      <option value="Purok 2A">Purok 2A</option>
+      <option value="Purok 2B">Purok 2B</option>
+      <option value="Purok 3">Purok 3</option>
+      <option value="Purok 4">Purok 4</option>
+      <option value="Purok 5">Purok 5</option>
+      <option value="Purok 6">Purok 6</option>
+    </select>
+    <input type="tel" name="cellphone_no" placeholder="Contact Number">
+    <input type="text" name="facebook" placeholder="Facebook Account">
+  </div>
 
-    <h2>Employment & Other Info</h2>
-    <div class="grid">
-      <div>
-        <label>Employed/Unemployed</label>
-        <input
-          type="text"
-          name="employed_unemployed"
-          list="employed_unemployed-options"
-          placeholder="Select or type occupation"
-          required
-        />
-      </div>
-      <datalist id="employed_unemployed-options">
-        <option>N/A</option>
-        <option value="Self-employed"></option>
-        <option value="Unemployed"></option>
-        <option value="Other"></option>
-      </datalist>
-      <div>
-        <label>Occupation</label>
-        <input type="text" name="occupation" required />
-      </div>
-      <div>
-        <label>Solo Parent</label>
-        <select name="solo_parent" >
-          <option value="">-- Select --</option>
-          <option>N/A</option>
-          <option>Yes</option>
-          <option>No</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div>
-        <label>OFW</label>
-        <input
-          type="text"
-          name="ofw"
-          list="ofw-options"
-          placeholder="Select or type if yes (Please Specify)"
-          
-        />
-      </div>
-      <datalist id="ofw-options">
-        <option>N/A</option>
-        <option value="Yes"></option>
-        <option value="No"></option>
-        <option value="Other"></option>
-      </datalist>
-      <div>
-        <label>Out-of-school Youth</label>
-        <select name="school_youth" >
-          <option value="">-- Select --</option>
-          <option>N/A</option>
-          <option>Yes</option>
-          <option>No</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div>
-        <label>PWD</label>
-        <input
-          type="text"
-          name="pwd"
-          list="pwd-options"
-          placeholder="Select or type if yes (please specify)"
-          
-        />
-      </div>
-      <datalist id="pwd-options">
-        <option>N/A</option>
-        <option value="NO"></option>
-        <option value="DEAF"></option>
-        <option value="MUTE"></option>
-        <option value="BLIND"></option>
-        <option value="INTELLECTUAL DISABILITY"></option>
-        <option value="AUTISM"></option>
-        <option value="PHYSICAL DISABILITY"></option>
-        <option value="DISABILITY WALKING OR MOVEMENT"></option>
-        <option value="HEALTH-RELATED DISABILITY (ILLNESS)"></option>
-      </datalist>
-      <div>
-        <label>Indigenous People</label>
-        <input
-          type="text"
-          name="indigenous"
-          list="indigenous-options"
-          placeholder="Select or type if applicable"
-          required
-        />
-      </div>
-      <datalist id="indigenous-options">
-        <option>N/A</option>
-        <option value="MIGRANT"></option>
-        <option value="MANDAYA"></option>
-        <option value="NO"></option>
-      </datalist>
-      <div>
-        <label>Citizenship</label>
-        <input type="text" name="citizenship" required />
-      </div>
-      <div>
-        <label>Toilet</label>
-        <select name="toilet" required>
-          <option value="">-- Select --</option>
-          <option>N/A</option>
-          <option>Yes</option>
-          <option>No</option>
-        </select>
-      </div>
-       <div>
-        <label>Women's Association Member</label>
-        <select name="womens_association" >
-          <option value="">-- Select --</option>
-          <option>N/A</option>
-          <option>Yes</option>
-          <option>No</option>
-        </select>
-      </div>
-    </div>
+  <h2>Employment & Other Information</h2>
+  <div class="grid">
+    <input type="text" name="employed_unemployed" placeholder="Employment Status" required>
+    <input type="text" name="occupation" placeholder="Occupation" required>
+    <input type="text" name="citizenship" placeholder="Citizenship" required>
+    <input type="text" name="household_id" placeholder="Household ID" required>
+  </div>
 
-    <h2>Identification</h2>
-    <div class="grid">
-      <div>
-        <label>Valid ID</label>
-        <input type="text" name="valid_id"  />
-      </div>
-      <div>
-        <label>Type of ID</label>
-        <input type="text" name="type_id"  />
-      </div>
-      <div>
-        <label>Household ID</label>
-          <input type="text" name="household_id" required />
-        </div>
-        <div>
-            <label>Family ID</label>
-              <input type="text" name="family_id" required />
-            </div>
-              <div>
-            <label>Low-income</label>
-              <input type="text" name="family_id" required />
-            </div>
-              <div>
-            <label>Owned</label>
-              <input type="text" name="family_id" required />
-            </div>
-              <div>
-            <label>Rented</label>
-              <input type="text" name="family_id" required />
-            </div>
-              <div>
-            <label>information settler</label>
-              <input type="text" name="family_id" required />
-            </div>
-            
-    </div>
-    </div>
+  <h2>Additional Details</h2>
+  <div class="grid">
+    <input type="text" name="solo_parent" placeholder="Solo Parent (Yes/No)">
+    <input type="text" name="ofw" placeholder="OFW (Yes/No)">
+    <input type="text" name="school_youth" placeholder="Out-of-School Youth (Yes/No)">
+    <input type="text" name="pwd" placeholder="PWD (Yes/No or Specify)">
+    <input type="text" name="indigenous" placeholder="Indigenous People">
+    <input type="text" name="toilet" placeholder="Toilet (Yes/No)">
+    <input type="text" name="womens_association" placeholder="Women's Association Member (Yes/No)">
+    <input type="text" name="valid_id" placeholder="Valid ID">
+    <input type="text" name="type_id" placeholder="Type of ID">
+  </div>
 
-    </div>
+  <button type="submit">Save Record</button>
+</form>
 
-    <button type="submit">Save</button>
-  </form>
+<!-- Modal Popup -->
+<div class="modal" id="popupModal">
+  <div class="modal-content">
+    <h3 id="popupMessage"></h3>
+    <button id="closeModal">OK</button>
+  </div>
+</div>
 
-  <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Handle all input fields except facebook
-  const inputs = document.querySelectorAll('input:not([name="facebook"])');
-  inputs.forEach(function(input) {
-    // Convert existing value to uppercase on page load
-    if (input.type === 'text' || input.type === 'tel') {
-      input.value = input.value.toUpperCase();
-    }
-    // Convert to uppercase as user types
-    input.addEventListener('input', function() {
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Uppercase inputs except Facebook
+  document.querySelectorAll('input:not([name="facebook"])').forEach(input => {
+    input.addEventListener('input', () => {
       if (input.type === 'text' || input.type === 'tel') {
         input.value = input.value.toUpperCase();
       }
     });
   });
 
-  // Handle all select fields (convert option text to uppercase, keep value unchanged)
-  const selects = document.querySelectorAll('select');
-  selects.forEach(function(select) {
-    Array.from(select.options).forEach(function(option) {
-      option.text = option.text.toUpperCase();
-      // Do not change option.value to avoid clearing the value
-    });
-  });
+  // Handle modal popup message
+  <?php if (isset($message)): ?>
+  const modal = document.getElementById('popupModal');
+  const msg = document.getElementById('popupMessage');
+  msg.textContent = "<?php echo addslashes($message); ?>";
+  modal.style.display = 'flex';
+  document.getElementById('closeModal').onclick = function() {
+    modal.style.display = 'none';
+    <?php if (!empty($success)): ?>window.location.href='list.php';<?php endif; ?>
+  };
+  <?php endif; ?>
 });
 </script>
 </body>

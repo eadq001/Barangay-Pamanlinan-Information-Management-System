@@ -44,9 +44,9 @@ echo "Middle Name: " . htmlspecialchars($middle_name) . "<br>";
     
 <header>
     <nav class="navbar">
-      <div class="logo">Demographic Profiling System form</div>
+      <div class="logo">BARANGAY PAMANLINAN EDIT FORM</div>
       <ul class="nav-links">
-        <li><a href="list.php">LIST</a></li>
+        <li><a href="list.php">MAIN RECORDS</a></li>
         <li><a href="logout.php">LOGOUT</a></li>
       </ul>
     </nav>

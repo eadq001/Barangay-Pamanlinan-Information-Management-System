@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Information Form</title>
+  <style>
+    /* --- RESET & BASE --- */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+     background: #1a5e3c;     /* deep government-green background */
+      padding:20px;
+    }
+    h2{
+      text-align:center;
+      margin-bottom:10px;
+      color:#c8f809;
+    }
+     h1{
+      text-align:center;
+      margin-bottom:10px;
+      color:#21221e;
+    }
+
+    /* --- FORM LAYOUT --- */
+    form{
+      max-width:1200px;
+      margin:auto;
+      background:#fff;
+      border-radius:12px;
+      padding:20px;
+      box-shadow:0 0 15px rgba(0,0,0,0.1);
+      display:grid;
+      gap:15px;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+    }
+    @media(max-width:768px){
+      .grid-2{grid-template-columns:1fr;}
+    }
+
+    label{
+      font-weight:bold;
+      color:#2a5d34;
+      display:block;
+      margin-bottom:4px;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select{
+      width:100%;
+      padding:8px 10px;
+      border:1px solid #ccc;
+      border-radius:6px;
+    }
+    .checkbox-group{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:4px;
+    }
+    .checkbox-group label{
+      font-weight:normal;
+    }
+
+    button{
+      background:#2a5d34;
+      color:#fff;
+      border:none;
+      padding:12px 20px;
+      font-size:16px;
+      border-radius:6px;
+      cursor:pointer;
+      width: 30%;  /* button width reduced to 50% */
+        justify-self: center;  /* center the button */
+    }
+    button:hover{background:#25722e;}
+  </style>
+</head>
+<body>
+
+  <h2>Republic of the Philippines</h2>
+  <h2>Province of Surigao del Sur – City of Bislig<br>BARANGAY PAMANLINAN</h2>
+
+  <form action="save_personal_info.php" method="post">
+     <h1>Personal Information</h1><BR></BR>
+    <div class="grid-2">
+      <div>
+        <label>Region</label>
+        <input type="text" name="region">
+      </div>
+      <div>
+        <label>Province</label>
+        <input type="text" name="province">
+      </div>
+
+      <div>
+        <label>City / Municipality</label>
+        <input type="text" name="city">
+      </div>
+      <div>
+        <label>Barangay</label>
+        <input type="text" name="barangay">
+      </div>
+
+      <div>
+        <label>Resident Status</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="resident_status" value="Resident"> Resident</label>
+          <label><input type="radio" name="resident_status" value="Non-Resident"> Non-Resident</label>
+        </div>
+      </div>
+      <div>
+        <label>Household No.</label>
+        <input type="text" name="household_no">
+      </div>
+
+      <div>
+        <label>Purok No.</label>
+        <input type="text" name="purok_no">
+      </div>
+      <div>
+        <label>Street Name</label>
+        <input type="text" name="street_name">
+      </div>
+
+      <div>
+        <label>House No.</label>
+        <input type="text" name="house_no">
+      </div>
+      <div>
+        <label>Race / Ethnic Type</label>
+        <input type="text" name="race_type">
+      </div>
+
+      <div>
+        <label>First Name</label>
+        <input type="text" name="first_name">
+      </div>
+      <div>
+        <label>Middle Name</label>
+        <input type="text" name="middle_name">
+      </div>
+
+      <div>
+        <label>Last Name</label>
+        <input type="text" name="last_name">
+      </div>
+      <div>
+        <label>Extension Name</label>
+        <input type="text" name="extension_name">
+      </div>
+
+      <div>
+        <label>Date of Birth</label>
+        <input type="date" name="dob">
+      </div>
+      <div>
+        <label>Place of Birth</label>
+        <input type="text" name="pob">
+      </div>
+
+      <div>
+        <label>Gender</label>
+        <div class="checkbox-group">
+          <label><input type="radio" name="gender" value="Male"> Male</label>
+          <label><input type="radio" name="gender" value="Female"> Female</label>
+        </div>
+      </div>
+      <div>
+        <label>Civil Status</label>
+        <select name="civil_status">
+          <option value="">Select</option>
+          <option>Single</option>
+          <option>Married</option>
+          <option>Widowed</option>
+          <option>Separated</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Citizenship</label>
+        <input type="text" name="citizenship">
+      </div>
+      <div>
+        <label>Contact Number</label>
+        <input type="text" name="contact_number">
+      </div>
+
+      <div>
+        <label>Religion</label>
+        <input type="text" name="religion">
+      </div>
+      <div>
+        <label>PWD</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="pwd" value="Yes"> Yes</label>
+        </div>
+      </div>
+
+      <div>
+        <label>Functional Difficulty</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="functional_difficulty" value="Yes"> Yes</label>
+        </div>
+      </div>
+      <div>
+        <label>Mother Tongue</label>
+        <input type="text" name="mother_tongue">
+      </div>
+
+      <div>
+        <label>Gov. Scholar</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="gov_scholar" value="Yes"> Yes</label>
+        </div>
+      </div>
+      <div>
+        <label>Registered Voter</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="registered_voter" value="Yes"> Yes</label>
+        </div>
+      </div>
+
+      <div>
+        <label>4P’s Member</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="four_ps" value="Yes"> Yes</label>
+        </div>
+      </div>
+      <div>
+        <label>Senior Citizen</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="senior_citizen" value="Yes"> Yes</label>
+        </div>
+      </div>
+
+      <div>
+        <label>Occupation</label>
+        <input type="text" name="occupation">
+      </div>
+      <div>
+        <label>Indigency Member</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="indigency_member" value="Yes"> Yes</label>
+        </div>
+      </div>
+
+      <div>
+        <label>Out of School Child</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="out_of_school" value="Yes"> Yes</label>
+        </div>
+      </div>
+      <div>
+        <label>Est. Monthly Income (Personal)</label>
+        <input type="text" name="income_personal">
+      </div>
+
+      <div>
+        <label>Est. Monthly Income (Combined)</label>
+        <input type="text" name="income_combined">
+      </div>
+      <div>
+        <label>Kinship Position</label>
+        <select name="kinship">
+          <option value="">Select</option>
+          <option>Head of the Family</option>
+          <option>Spouse</option>
+          <option>Solo Parent</option>
+          <option>Solo Living</option>
+          <option>Dependent</option>
+          <option>Others</option>
+        </select>
+      </div>
+
+      <div style="grid-column:1 / -1">
+        <label>Others (Specify)</label>
+        <input type="text" name="others">
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
